@@ -30,7 +30,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let nib = UINib(nibName: "PostTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
-        tableView.rowHeight = 520
+        tableView.rowHeight = UITableViewAutomaticDimension
     
     }
 
@@ -119,6 +119,9 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         // セル内のボタンのアクションをソースコードで設定する
         cell.likeButton.addTarget(self, action:#selector(handleButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+
+        // セル内のボタンのアクションをソースコードで設定する
+        cell.commentPost.addTarget(self, action:#selector(inputComment(sender:event:)), for:  UIControlEvents.touchUpInside)
         
         return cell
     }
@@ -170,4 +173,21 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
 
+    func inputComment(sender: UIButton, event:UIEvent) {
+        print("DEBUG_PRINT: コメント欄が入力されました")
+        
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+
+        let cell = tableView.cellForRow(at: indexPath!) as! PostTableViewCell
+        
+        let postData = postArray[indexPath!.row]
+        let postRef = Database.database().reference().child(Const.PostPath).child(postData.id!)
+        let name = Auth.auth().currentUser?.displayName
+        let comment = ["comment": postData.comment! + name! + ":" + cell.commentField.text! + "\n"]
+        postRef.updateChildValues(comment)
+        
+    }
+    
 }

@@ -17,7 +17,10 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var likeLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
-    
+    @IBOutlet weak var commentPost: UIButton!
+    @IBOutlet weak var commentField: UITextField!
+    @IBOutlet weak var commentDisplay: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -49,7 +52,9 @@ class PostTableViewCell: UITableViewCell {
             let buttonImage = UIImage(named: "like_none")
             self.likeButton.setImage(buttonImage, for: UIControlState.normal)
         }
+
+        self.commentDisplay.text = postData.comment
     }
-    
+
 }
 
